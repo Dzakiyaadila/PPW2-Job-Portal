@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JobController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -15,6 +17,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Route::get('/profile', [JobController::class, 'index']) -> middleware('auth');
+// Route::get('/profile/admin', [JobController::class, 'adminJobs']) -> middleware(['auth', 'isAdmin']); 
+
+// loker read only
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/{job}', [JobController::class, 'show'])->name('jobs.show');
+
+// crud ops untuk admin
+
+
+Route::middleware(['auth', 'isAdmin'])->group(function () {
+    Route::get('/jobs/create', [JobController::class, 'create'])->name('jobs.create');
+    Route::post('/jobs', [JobController::class, 'store'])->name('jobs.store');
+    Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])->name('jobs.edit');
+    Route::put('/jobs/{job}', [JobController::class, 'update'])->name('jobs.update');
+    Route::delete('/jobs/{job}', [JobController::class, 'destroy'])->name('jobs.destroy');
 });
 
 require __DIR__.'/auth.php';
