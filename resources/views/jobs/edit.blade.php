@@ -1,113 +1,150 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Edit Lowongan') }} - {{ $job->position }}
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form action="{{ route('jobs.update', $job) }}" method="POST">  <!-- PAKAI $job -->
+    <title>Job Portal - Edit Lowongan</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased">
+    @include('layouts.navigation')
+
+    <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Edit Lowongan
+            </h2>
+        </div>
+    </header>
+
+    <main class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Notifications -->
+            @if($errors->any())
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Form -->
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <form action="{{ route('jobs.update', $job) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Posisi -->
-                            <div class="md:col-span-2">
-                                <label for="position" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Posisi Pekerjaan *
-                                </label>
-                                <input type="text" name="position" id="position" required
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                       value="{{ old('position', $job->position) }}">  <!-- PAKAI $job -->
-                                @error('position')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+
+                        <div class="space-y-6">
+                            <!-- Judul -->
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700">Judul Lowongan *</label>
+                                <input type="text" 
+                                       name="title" 
+                                       id="title" 
+                                       value="{{ old('title', $job->title) }}"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                       required>
                             </div>
 
                             <!-- Perusahaan -->
-                            <div class="md:col-span-2">
-                                <label for="company" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Nama Perusahaan *
-                                </label>
-                                <input type="text" name="company" id="company" required
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                       value="{{ old('company', $job->company) }}">  <!-- PAKAI $job -->
-                                @error('company')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Salary Simple -->
-                            <div class="md:col-span-2">
-                                <label for="salary" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Gaji *
-                                </label>
-                                <input type="text" name="salary" id="salary" required
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                       value="{{ old('salary', $job->salary) }}"  <!-- PAKAI $job -->
-                                       placeholder="Contoh: Rp 8-12 juta">
-                                @error('salary')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Kuota -->
                             <div>
-                                <label for="capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Kuota / Jumlah Orang Dibutuhkan *
-                                </label>
-                                <input type="number" name="capacity" id="capacity" required min="1"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                       value="{{ old('capacity', $job->capacity) }}">  <!-- PAKAI $job -->
-                                @error('capacity')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <label for="company" class="block text-sm font-medium text-gray-700">Nama Perusahaan *</label>
+                                <input type="text" 
+                                       name="company" 
+                                       id="company" 
+                                       value="{{ old('company', $job->company) }}"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                       required>
                             </div>
 
                             <!-- Lokasi -->
                             <div>
-                                <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Lokasi Kerja *
-                                </label>
-                                <input type="text" name="location" id="location" required
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                       value="{{ old('location', $job->location) }}">  <!-- PAKAI $job -->
-                                @error('location')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <label for="location" class="block text-sm font-medium text-gray-700">Lokasi *</label>
+                                <input type="text" 
+                                       name="location" 
+                                       id="location" 
+                                       value="{{ old('location', $job->location) }}"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                       required>
+                            </div>
+
+                            <!-- Gaji -->
+                            <div>
+                                <label for="salary" class="block text-sm font-medium text-gray-700">Gaji *</label>
+                                <input type="number" 
+                                       name="salary" 
+                                       id="salary" 
+                                       value="{{ old('salary', $job->salary) }}"
+                                       min="0"
+                                       step="100000"
+                                       class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                       required>
+                                <p class="mt-1 text-sm text-gray-500">Contoh: 10000000 untuk Rp 10.000.000</p>
+                            </div>
+
+                            <!-- Logo Perusahaan -->
+                            <div>
+                                <label for="logo" class="block text-sm font-medium text-gray-700">Logo Perusahaan (Opsional)</label>
+                                
+                                @if($job->logo)
+                                    <div class="mb-2">
+                                        <p class="text-sm text-gray-600">Logo saat ini:</p>
+                                        <img src="{{ asset('storage/' . $job->logo) }}" 
+                                             alt="Logo {{ $job->company }}"
+                                             class="h-20 w-20 object-contain border rounded">
+                                    </div>
+                                @endif
+                                
+                                <input type="file" 
+                                       name="logo" 
+                                       id="logo"
+                                       accept="image/*"
+                                       class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF. Maks: 2MB</p>
                             </div>
 
                             <!-- Deskripsi -->
-                            <div class="md:col-span-2">
-                                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Deskripsi Pekerjaan
-                                </label>
-                                <textarea name="description" id="description" rows="4"
-                                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                                          placeholder="Jelaskan detail pekerjaan, requirements, dll...">{{ old('description', $job->description) }}</textarea>  <!-- PAKAI $job -->
-                                @error('description')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi Lowongan *</label>
+                                <textarea name="description" 
+                                          id="description" 
+                                          rows="5"
+                                          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                          required>{{ old('description', $job->description) }}</textarea>
                             </div>
-                        </div>
 
-                        <!-- Buttons -->
-                        <div class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                            <a href="{{ route('jobs.index') }}" 
-                               class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md">
-                                Batal
-                            </a>
-                            <button type="submit" 
-                                    class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md">
-                                Update Lowongan
-                            </button>
+                            <!-- Button Group -->
+                            <div class="flex justify-end space-x-3">
+                                <a href="{{ route('jobs.index') }}" 
+                                   class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    Batal
+                                </a>
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Simpan Perubahan
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </main>
+</body>
+</html>
