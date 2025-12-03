@@ -24,4 +24,5 @@ class JobResource extends JsonResource
             'data' => $this->resource
         ];
     }
+
 }

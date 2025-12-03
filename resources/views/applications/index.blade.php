@@ -174,40 +174,12 @@
                                 <small style="color: #64748b; font-size: 12px;">{{ $application->user->email }}</small>
                             </td>
                             <td>{{ $application->jobListing->title }}</td>
-                            {{-- <td>
-                                <a href="{{ asset('storage/' . $application->cv) }}" 
-                                   target="_blank"
-                                   class="btn-view">
-                                    Lihat CV
-                                </a>
-                            </td> --}}
-
-
-                            {{-- <td class="px-4 py-3 text-sm text-gray-700">
-                                <a href="{{ asset('storage/' . $application->cv) }}" 
-                                target="_blank" 
-                                class="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-3 py-1 text-xs font-semibold text-white hover:bg-blue-700">
-                                    Lihat CV
-                                </a>
-                                <a href="{{ route('download.cv', $application->id) }}" 
-                                class="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-1 text-xs font-semibold text-white hover:bg-green-700 ml-2">
-                                    Download CV
-                                </a>
-                            </td> --}}
                             <td class="px-4 py-3 text-sm text-gray-700 space-x-2">
-                                {{-- <a href="{{ asset('storage/' . $application->cv) }}" 
-                                target="_blank"
-                                class="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 no-underline cursor-pointer transition">
-                                    Lihat CV
-                                </a> --}}
-
                                 <a href="{{ route('download.cv', $application->id) }}"
                                 class="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 no-underline cursor-pointer transition">
                                     Download CV
                                 </a>
                             </td>
-
-
 
                             <td>
                                 @if($application->status == 'pending')
